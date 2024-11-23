@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng dụng Cơ sở Dữ liệu</title>
+    <style>
+        .form-container { margin-bottom: 20px; }
+        .form-container input { margin: 5px; }
+        .message { margin-bottom: 10px; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+
+<h1>Ứng dụng Cơ sở Dữ liệu</h1>
+
+<!-- Thông báo thành công và lỗi -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="message {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- Kết nối cơ sở dữ liệu -->
+<div class="form-container">
+    <h2>Kết nối đến cơ sở dữ liệu</h2>
+    <form action="{{ url_for('connect_db') }}" method="POST">
+        <button type="submit">Kết nối</button>
+    </form>
+</div>
+
+<!-- Tải dữ liệu -->
+<div class="form-container">
+    <h2>Tải Dữ liệu</h2>
+    <form action="{{ url_for('load_data') }}" method="POST">
+        <input type="text" name="table_name" placeholder="Tên bảng" required>
+        <button type="submit">Tải Dữ liệu</button>
+    </form>
+</div>
+
+<!-- Chèn dữ liệu -->
+<div class="form-container">
+    <h2>Chèn Dữ liệu</h2>
+    <form action="{{ url_for('insert_data') }}" method="POST">
+        <input type="text" name="hovaten" placeholder="Họ Tên" required>
+        <input type="text" name="diachi" placeholder="Địa Chỉ" required>
+        <input type="number" name="sosp" placeholder="Số SP" required>
+        <input type="text" name="hinhthucthanhtoan" placeholder="Hình thức thanh toán" required>
+        <input type="text" name="table_name" placeholder="Tên bảng" required>
+        <button type="submit">Chèn Dữ liệu</button>
+    </form>
+</div>
+
+<!-- Xóa dữ liệu -->
+<div class="form-container">
+    <h2>Xóa Dữ liệu</h2>
+    <form action="{{ url_for('delete_data') }}" method="POST">
+        <input type="text" name="delete_hovaten" placeholder="Họ Tên để xóa" required>
+        <input type="text" name="table_name" placeholder="Tên bảng" required>
+        <button type="submit">Xóa Dữ liệu</button>
+    </form>
+</div>
+
+<!-- Hiển thị dữ liệu -->
+<h2>Dữ liệu bảng</h2>
+{% if rows %}
+  <table border="1">
+    <tr>
+      <th>Họ Tên</th>
+      <th>Địa Chỉ</th>
+      <th>Số SP</th>
+      <th>Hình thức thanh toán</th>
+    </tr>
+    {% for row in rows %}
+      <tr>
+        <td>{{ row[0] }}</td>
+        <td>{{ row[1] }}</td>
+        <td>{{ row[2] }}</td>
+        <td>{{ row[3] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>Chưa có dữ liệu</p>
+{% endif %}
+
+</body>
+</html>
